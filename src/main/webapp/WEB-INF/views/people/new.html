@@ -9,9 +9,11 @@
 <form th:method="POST" th:action="@{/people}" th:object="${person}" th:accept-charset="UTF-8">
     <label for="name">Введите имя: </label>
     <input type="text" th:field="*{name}" id="name"/>
+    <div style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">error</div>
     <br/>
     <label for="age">Введите возраст: </label>
     <input type="text" th:field="*{age}" id="age"/>
+    <div style="color: red" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">error</div>
     <br/>
     <input type="submit" value="Добавить"/>
 </form>

@@ -5,13 +5,16 @@ import org.example.model.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/books")
 public class BookController {
 
-    private BookDAO bookDAO;
+    private final BookDAO bookDAO;
 
     @Autowired
     public BookController(BookDAO bookDAO){
@@ -30,7 +33,11 @@ public class BookController {
     }
 
     @PostMapping()
-    public String processNewBook(@ModelAttribute("book") Book book){
+    public String processNewBook(@ModelAttribute("book") @Valid Book book,
+                                 BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            return "books/new";
+        }
         bookDAO.addBook(book);
         return "redirect:/books/";
     }
@@ -48,7 +55,11 @@ public class BookController {
     }
 
     @PatchMapping("/{id}")
-    public String processEditForm(@PathVariable("id") int id, @ModelAttribute("book") Book book){
+    public String processEditForm(@PathVariable("id") int id, @ModelAttribute("book") @Valid Book book,
+                                  BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            return "books/edit";
+        }
         bookDAO.updateBook(id, book);
         return "redirect:/books/";
     }

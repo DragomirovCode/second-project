@@ -1,19 +1,22 @@
 package org.example.model;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
 public class Person {
 
     private int id;
+
+    @NotEmpty(message = "это поле не должно быть пустым")
+    @Size(min = 2, max = 30, message = "это поле должно иметь минимум 2 и максимум 30 символов")
     private String name;
+
+    @Min(value = 1, message = "это поле должно быть больше 0")
     private int age;
 
     public Person(){
 
-    }
-
-    public Person(int id, String name, int age) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
     }
 
     public int getId() {

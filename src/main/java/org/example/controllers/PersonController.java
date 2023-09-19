@@ -5,12 +5,15 @@ import org.example.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/people")
 public class PersonController {
-    private PersonDAO personDAO;
+    private final PersonDAO personDAO;
 
     @Autowired
     public PersonController(PersonDAO personDAO) {
@@ -29,7 +32,11 @@ public class PersonController {
     }
 
     @PostMapping()
-    public String processSaveNewPerson(@ModelAttribute("person") Person person) {
+    public String processSaveNewPerson(@ModelAttribute("person") @Valid Person person,
+                                       BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return "people/new";
+        }
         personDAO.addPerson(person);
         return "redirect:/people/";
     }
@@ -47,7 +54,11 @@ public class PersonController {
     }
 
     @PatchMapping("/{id}")
-    public String processEditForm(@ModelAttribute("person") Person person, @PathVariable("id") int id) {
+    public String processEditForm(@PathVariable("id") int id, @ModelAttribute("person") @Valid Person person,
+                                  BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return "people/edit";
+        }
         personDAO.updatePerson(id, person);
         return "redirect:/people/";
     }
