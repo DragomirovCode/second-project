@@ -5,7 +5,20 @@
     <title>id</title>
 </head>
 <body>
-<h4> ваш id: </h4>
+<div th:if="${books.isEmpty()}">
+    <p>Человек пока не взял ни одной книги </p>
+    <hr/>
+</div>
+
+<div th:if="${!books.isEmpty()}">
+    <hr/>
+    <b>Книги:</b>
+    <table th:each="book : ${books}">
+        <tr th:text="${book.getTitle() + ' ,' + book.getAuthor() + ' ,' + book.getYear()}">book</tr>
+    </table>
+    <hr/>
+</div>
+<h4> id: </h4>
 <p th:text="${person.getId()}">VALUE</p>
 <br/>
 <br/>
@@ -14,6 +27,7 @@
 <br/>
 <h4> ваш возраст: </h4>
 <p th:text="${person.getAge()}">VALUE</p>
+<br/>
 <br/>
 <a th:href="@{/people/{id}/edit(id=${person.getId()})}"><button>Изменить</button></a>
 <br/>

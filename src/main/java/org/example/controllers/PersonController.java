@@ -44,6 +44,7 @@ public class PersonController {
     @GetMapping("/{id}")
     public String processFetchPersonById(@PathVariable("id") int id, Model model) {
         model.addAttribute("person", personDAO.getPersonById(id));
+        model.addAttribute("books", personDAO.getBooksByPersonId(id));
         return "people/id";
     }
 

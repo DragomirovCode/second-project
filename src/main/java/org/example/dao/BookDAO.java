@@ -1,11 +1,13 @@
 package org.example.dao;
 
 import org.example.model.Book;
+import org.example.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class BookDAO {
@@ -38,5 +40,18 @@ public class BookDAO {
 
     public void deleteBook(int id){
         jdbcTemplate.update("DELETE FROM Book WHERE id=?", id);
+    }
+
+    public Optional<Person> getBookOwner(int id){
+        return jdbcTemplate.query("SELECT Person.* FROM Book JOIN Person ON Book.person_id = Person.id " +
+                "WHERE Book.id = ?", new Object[]{id}, new PersonMapper()).stream().findAny();
+    }
+
+    public void release(int id){
+        jdbcTemplate.update("UPDATE Book SET person_id = NULL WHERE id = ?", id);
+    }
+
+    public void assign(int id, Person selectedPerson){
+        jdbcTemplate.update("UPDATE Book SET person_id = ? WHERE id = ?", selectedPerson.getId(), id);
     }
 }
